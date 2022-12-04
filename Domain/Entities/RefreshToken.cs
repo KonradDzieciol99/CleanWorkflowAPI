@@ -11,12 +11,10 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public Guid Token{ get; set; }
-        public string JwtId { get; set; }
-        public bool IsUsed { get; set; }
-        public bool IsRevoked { get; set; }
-        public DateTime AddedDate { get; set; }
-        public DateTime ExpiryDate { get; set; }
-
+        public bool IsUsed { get; set; } = true;
+        public bool IsRevoked { get; set; } = false;
+        public DateTime AddedDate { get; set; } = new DateTime();
+        public DateTime ExpiryDate { get; set; } = new DateTime().AddDays(7);
         public int UserId { get; set; }
         public AppUser AppUser { get; set; }
 

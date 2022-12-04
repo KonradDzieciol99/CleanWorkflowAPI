@@ -15,15 +15,20 @@ namespace Application.Accounts.Handlers
     {
         private readonly IIdentityService _identityService;
         private readonly IJwtTokenService _jwtTokenService;
+        private readonly IRefreshTokenService _refreshTokenService;
 
-        public LoginCommandHandler(IIdentityService identityService,IJwtTokenService jwtTokenService)
+        public LoginCommandHandler(IIdentityService identityService,IJwtTokenService jwtTokenService, IRefreshTokenService refreshTokenService)
         {
             this._identityService = identityService;
             this._jwtTokenService = jwtTokenService;
+            this._refreshTokenService = refreshTokenService;
         }
         public async Task<UserDto> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _identityService.SignInAsync(request.Email, request.Password);
+
+            var refreshToken = await _refreshTokenService.CreateRefreshToken(user);
+            _refreshTokenService.SetRefreshTokenInCookie(refreshToken);
 
             return new UserDto
             {

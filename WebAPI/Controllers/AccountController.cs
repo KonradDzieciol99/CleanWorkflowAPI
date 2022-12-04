@@ -1,5 +1,6 @@
 ﻿using Application.Accounts.Commands;
 using Application.Dtos;
+using Application.Interfaces;
 using Core.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -39,5 +40,32 @@ namespace WorkflowApi.Controllers
             return await _mediator.Send(command);
             //return Ok();
         }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<string>> RefreshToken()
+        {
+            //var refreshToken = Request.Cookies["refreshToken"];
+            //var response = _userService.RefreshToken(refreshToken, ipAddress());
+            //setTokenCookie(response.RefreshToken);
+            return await _mediator.Send(new RefreshTokenCommand());
+
+        }
+
+        [HttpPost("revoke-token")]
+        public IActionResult RevokeToken(RevokeTokenRequest model)
+        {
+            // accept refresh token in request body or cookie
+            var token = model.Token ?? Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(token))
+                return BadRequest(new { message = "Token is required" });
+
+            _userService.RevokeToken(token, ipAddress());
+            return Ok(new { message = "Token revoked" });
+        }
+
+
+
+
     }
 }

@@ -17,14 +17,14 @@ namespace Application.Accounts.Handlers
         private readonly IMediator _mediator;
         private readonly IJwtTokenService _jwtTokenService;
         private readonly IIdentityService _identityService;
-        private readonly IRefreshTokenService _cookieService;
+        private readonly IRefreshTokenService _refreshTokenService;
 
-        public RegisterCommandHandler(IMediator mediator, IJwtTokenService jwtTokenService, IIdentityService identityService,IRefreshTokenService cookieService)
+        public RegisterCommandHandler(IMediator mediator, IJwtTokenService jwtTokenService, IIdentityService identityService,IRefreshTokenService refreshTokenService)
         {
             this._mediator = mediator;
             this._jwtTokenService = jwtTokenService;
             this._identityService = identityService;
-            this._cookieService = cookieService;
+            this._refreshTokenService = refreshTokenService;
         }
 
         public async Task<UserDto> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -34,8 +34,9 @@ namespace Application.Accounts.Handlers
 
             await _mediator.Publish(new UserCreatedEvent(user));
 
-            var refreshToken = await _cookieService.CreateRefreshToken(user);
-            _cookieService.SetRefreshTokenInCookie()
+            var refreshToken = await _refreshTokenService.CreateRefreshToken(user);
+            _refreshTokenService.SetRefreshTokenInCookie(refreshToken);
+
             return new UserDto
             {
                 Email = user.Email,

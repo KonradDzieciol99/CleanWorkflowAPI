@@ -13,6 +13,9 @@ public interface IIdentityService
     //Task<bool> AuthorizeAsync(string userId, string policyName);
     Task<AppUser> CreateUserAsync(string email,string password);
     Task<AppUser> SignInAsync(string email,string password);
+    Task<AppUser> FindRefreshTokenOwner(Guid refreshToken);
+    Task RevokeRefreshToken(Guid refreshToken,AppUser appUser);
+
 
     //Task<AppUser> DeleteUserAsync(string userId);
 }
