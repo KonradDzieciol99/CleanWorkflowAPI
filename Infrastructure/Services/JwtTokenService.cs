@@ -57,7 +57,6 @@ namespace Infrastructure.Services
 
             var refreshToken = new RefreshToken()
             {
-                JwtId = token.Id,
                 IsUsed = false,
                 IsRevoked = false,
                 UserId = user.Id,

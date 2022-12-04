@@ -11,6 +11,6 @@ namespace Application.Interfaces
     {
         public void SetRefreshTokenInCookie(Guid guid);
         public Task<Guid> CreateRefreshToken(AppUser appUser);
-        public Task<Guid> GetRefreshTokenFromCookie();
+        public Guid GetRefreshTokenFromCookie();
     }
 }

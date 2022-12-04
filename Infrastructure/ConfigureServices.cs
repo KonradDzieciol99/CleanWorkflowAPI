@@ -1,7 +1,9 @@
 ﻿using Application.Interfaces;
 using Core.Interfaces;
+using Core.Interfaces.IRepositories;
 using Domain.Identity.Entities;
 using Infrastructure.Persistence;
+using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -56,6 +58,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IJwtTokenService, JwtTokenService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IRefreshTokenService, RefreshTokenService>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ApplicationDbContextInitialiser>();
             services.AddHttpContextAccessor();
 

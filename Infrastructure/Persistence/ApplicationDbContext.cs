@@ -23,6 +23,7 @@ namespace Infrastructure.Persistence
         public DbSet<UserInvited> Invitations { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<GanttEvent> GanttEvents { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public static string JsonValue(string column, [NotParameterized] string path) => throw new NotSupportedException();
         public static string JsonQuery(string column, [NotParameterized] string path) => throw new NotSupportedException();

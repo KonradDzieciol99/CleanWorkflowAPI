@@ -30,7 +30,7 @@ namespace Application.Accounts.Handlers
 
         public async Task<string> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
-            var endOfLifeRefreshToken = await _refreshTokenService.GetRefreshTokenFromCookie();
+            var endOfLifeRefreshToken = _refreshTokenService.GetRefreshTokenFromCookie();
             var user = await _identityService.FindRefreshTokenOwner(endOfLifeRefreshToken);
             await _identityService.RevokeRefreshToken(endOfLifeRefreshToken,user);
 
