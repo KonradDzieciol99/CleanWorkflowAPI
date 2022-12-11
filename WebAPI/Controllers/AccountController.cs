@@ -23,26 +23,17 @@ namespace WorkflowApi.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterCommand command)
         {
-            //var cookieOptions = new CookieOptions();
-            //var c = Request.Cookies["cookieName"];
-            //var cookie = Request.Cookies.Get("cookieName");
-
             return await _mediator.Send(command);
-            //return Ok();
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginCommand command)
         {
-            //Request.Cookies.;
-
-            //Response.Cookies.
             return await _mediator.Send(command);
-            //return Ok();
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<string>> RefreshToken()
+        public async Task<ActionResult<UserDto>> RefreshToken()
         {
             return await _mediator.Send(new RefreshTokenCommand());
         }

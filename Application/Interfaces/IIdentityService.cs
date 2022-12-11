@@ -14,7 +14,7 @@ public interface IIdentityService
     Task<AppUser> CreateUserAsync(string email,string password);
     Task<AppUser> SignInAsync(string email,string password);
     Task<AppUser> FindRefreshTokenOwner(Guid refreshToken);
-    Task RevokeRefreshToken(Guid refreshToken,AppUser appUser);
+    //Task RevokeRefreshToken(Guid refreshToken,AppUser appUser);
 
 
     //Task<AppUser> DeleteUserAsync(string userId);

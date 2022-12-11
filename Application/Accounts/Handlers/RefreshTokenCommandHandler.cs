@@ -1,4 +1,5 @@
 ﻿using Application.Accounts.Commands;
+using Application.Dtos;
 using Application.Interfaces;
 using Core.Interfaces;
 using Core.Interfaces.IRepositories;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Application.Accounts.Handlers
 {
-    internal class RefreshTokenCommandHandler:IRequestHandler<RefreshTokenCommand,string>
+    internal class RefreshTokenCommandHandler:IRequestHandler<RefreshTokenCommand, UserDto>
     {
         private readonly IIdentityService _identityService;
         private readonly IJwtTokenService _jwtTokenService;
@@ -28,17 +29,22 @@ namespace Application.Accounts.Handlers
             this._unitOfWork = unitOfWork;
         }
 
-        public async Task<string> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        public async Task<UserDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var endOfLifeRefreshToken = _refreshTokenService.GetRefreshTokenFromCookie();
             var user = await _identityService.FindRefreshTokenOwner(endOfLifeRefreshToken);
-            await _identityService.RevokeRefreshToken(endOfLifeRefreshToken,user);
+            await _refreshTokenService.RevokeRefreshToken(endOfLifeRefreshToken,user);
 
             var newRefreshToken = await _refreshTokenService.CreateRefreshToken(user);
             var jwtToken = await _jwtTokenService.CreateToken(user);
             _refreshTokenService.SetRefreshTokenInCookie(newRefreshToken);
 
-            return jwtToken;
+            //return jwtToken;
+            return new UserDto
+            {
+                Email = user.Email,
+                Token = await _jwtTokenService.CreateToken(user),
+            };
         }
     }
 }

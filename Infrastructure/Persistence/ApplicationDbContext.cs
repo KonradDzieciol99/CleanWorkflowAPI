@@ -44,6 +44,8 @@ namespace Infrastructure.Persistence
             {
                 opt.HasKey(x => x.Id);
 
+                opt.HasIndex(x => x.Token).IsUnique();
+
                 opt.HasOne(x => x.AppUser)
                    .WithMany(x => x.RefreshTokens)
                    .HasForeignKey(x => x.UserId);

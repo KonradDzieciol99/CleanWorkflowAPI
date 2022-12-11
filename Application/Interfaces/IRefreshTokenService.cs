@@ -9,8 +9,9 @@ namespace Application.Interfaces
 {
     public interface IRefreshTokenService
     {
-        public void SetRefreshTokenInCookie(Guid guid);
-        public Task<Guid> CreateRefreshToken(AppUser appUser);
-        public Guid GetRefreshTokenFromCookie();
+        void SetRefreshTokenInCookie(Guid guid);
+        Task<Guid> CreateRefreshToken(AppUser appUser);
+        Guid GetRefreshTokenFromCookie();
+        Task RevokeRefreshToken(Guid refreshToken, AppUser appUser);
     }
 }

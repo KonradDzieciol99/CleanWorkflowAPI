@@ -37,7 +37,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                   
+
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
@@ -46,6 +46,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         ValidateAudience = false,
                         ValidIssuer = configuration["JWT:Issuer"],
                         ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
 

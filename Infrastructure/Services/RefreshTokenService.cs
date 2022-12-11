@@ -4,11 +4,13 @@ using Domain.Entities;
 using Domain.Identity.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WorkflowApi.Exceptions;
 
 namespace Infrastructure.Services
 {
@@ -29,7 +31,7 @@ namespace Infrastructure.Services
         {
             var refreshToken = new RefreshToken()
             {
-                Token = new Guid(),
+                Token = Guid.NewGuid(),
                 UserId = appUser.Id
             };
 
@@ -46,14 +48,13 @@ namespace Infrastructure.Services
 
         public Guid GetRefreshTokenFromCookie()
         {
-            string? refreshTokenAsString=_httpContext.Request.Cookies["sdfs"];
+            string? refreshTokenAsString=_httpContext.Request.Cookies["Workflow-Refresh-Token"];
 
             if (string.IsNullOrEmpty(refreshTokenAsString))
             {
                 throw new ArgumentNullException("empty cookie");//badrequest???
             }
 
-            
             if (Guid.TryParse(refreshTokenAsString, out Guid refreshTokenAsGuid))
             {
                 return refreshTokenAsGuid;
@@ -73,12 +74,30 @@ namespace Infrastructure.Services
 
             try
             {
-                _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken.ToString(), cookieOptions);
+                _httpContext.Response.Cookies.Append("Workflow-Refresh-Token", refreshToken.ToString(), cookieOptions);
             }
             catch (Exception)
             {
                 throw;
             }
+        }
+        public async Task RevokeRefreshToken(Guid refreshToken, AppUser appUser)
+        {
+            var refreshTokenFromDb  = await _unitOfWork.RefreshTokensRepository.FindOneAsync(x => x.Token == refreshToken);
+            if (refreshTokenFromDb == null)
+            {
+                throw new BadRequestException("RefreshToken does not exist");
+            }
+            refreshTokenFromDb.IsRevoked = true;
+
+            if (await _unitOfWork.Complete())
+            {
+                await Task.CompletedTask;
+                return;
+            }
+
+            throw new BadRequestException("Can't revoke RefreshToken");
+
         }
     }
 }

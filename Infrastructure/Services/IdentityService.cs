@@ -50,7 +50,8 @@ public class IdentityService : IIdentityService
 
     public async Task<AppUser> FindRefreshTokenOwner(Guid refreshToken)
     {
-        var user = await _userManager.Users.Where(x => x.RefreshTokens.Any(u => u.Token == refreshToken)).Include(x => x.RefreshTokens.First(u=>u.Token==refreshToken)).FirstOrDefaultAsync();
+        //var user = await _userManager.Users.Where(x => x.RefreshTokens.Any(u => u.Token == refreshToken)).Include(x => x.RefreshTokens.First(u => u.Token == refreshToken)).FirstOrDefaultAsync();
+        var user = await _userManager.Users.Where(x => x.RefreshTokens.Any(u => u.Token == refreshToken)).FirstOrDefaultAsync();
 
         if (user == null)
         {
@@ -59,25 +60,24 @@ public class IdentityService : IIdentityService
 
         return user;
     }
+    //public async Task RevokeRefreshToken(Guid refreshToken, AppUser appUser)
+    //{
+    //    var refreshTokenFromDb = appUser.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken);
+    //    if (refreshTokenFromDb == null)
+    //    {
+    //        throw new BadRequestException("RefreshToken does not exist");
+    //    }
+    //    refreshTokenFromDb.IsRevoked = true;
 
-    public async Task RevokeRefreshToken(Guid refreshToken, AppUser appUser)
-    {
-        var refreshTokenFromDb = appUser.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken);
-        if (refreshTokenFromDb == null)
-        {
-            throw new BadRequestException("RefreshToken does not exist");
-        }
-        refreshTokenFromDb.IsRevoked = true;
+    //    var updateResoult = await _userManager.UpdateAsync(appUser);
 
-        var updateResoult = await _userManager.UpdateAsync(appUser);
+    //    if (!updateResoult.Succeeded)
+    //    {
+    //        throw new BadRequestException(String.Join(" ", updateResoult.Errors.Select(x => x.Description)));
+    //    }
 
-        if (!updateResoult.Succeeded)
-        {
-            throw new BadRequestException(String.Join(" ", updateResoult.Errors.Select(x => x.Description)));
-        }
-
-        await Task.CompletedTask;
-    }
+    //    await Task.CompletedTask;
+    //}
 
     public async Task<AppUser> SignInAsync(string email, string password)
     {
