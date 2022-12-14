@@ -14,13 +14,6 @@ namespace Core.Interfaces.IRepositories
         void AddRange(IEnumerable<TEntity> entities);
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
-        Task<IEnumerable<TResoult>> FindAndGroupByAsync<TKey, TResoult>(Expression<Func<TEntity, bool>> predicate,
-                                Expression<Func<TEntity, TKey>> keySelector, Expression<Func<IGrouping<TKey, TEntity>, TResoult>> selector);
-        Task<IEnumerable<TEntity>> FindAndOrderByAsync<TKey, TResoult>(Expression<Func<TEntity, bool>> predicate,
-                                Expression<Func<TEntity, TKey>> keySelector);
-        Task<IEnumerable<TEntity>> FindAndIncludeAsync<TProperty>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TProperty>> navigationPropertyPath);
-        Task<IEnumerable<TEntity>> FindAndIncludeX2Async<TProperty, TPropertyX2>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TProperty>> navigationPropertyPath, Expression<Func<TEntity, TPropertyX2>> navigationPropertyPathX2);
-        Task<TEntity?> FindOneAndIncludeX2Async<TProperty, TPropertyX2>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TProperty>> navigationPropertyPath, Expression<Func<TEntity, TPropertyX2>> navigationPropertyPathX2);
 
     }
 }

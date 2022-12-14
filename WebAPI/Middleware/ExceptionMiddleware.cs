@@ -48,6 +48,15 @@ public class ExceptionMiddleware
                 Message = badRequestException.Message,
             }.ToString());
         }
+        else if (exception is UnauthorizedAccessException unauthorizedAccessException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            await context.Response.WriteAsync(new ErrorDetails()
+            {
+                StatusCode = context.Response.StatusCode,
+                Message = unauthorizedAccessException.Message,
+            }.ToString());
+        }
         else
         {
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -58,6 +67,6 @@ public class ExceptionMiddleware
             }.ToString());
         }
 
-
+        
     }
 }

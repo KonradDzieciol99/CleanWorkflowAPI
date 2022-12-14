@@ -14,7 +14,6 @@ namespace Infrastructure.Repositories
         {
             this._dbContext = applicationDbContext;
         }
-
         public void Add(TEntity entity)
         {
             _dbContext.Set<TEntity>().Add(entity);
@@ -35,16 +34,6 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Set<TEntity>().Where(predicate).FirstOrDefaultAsync();
         }
-        public async Task<IEnumerable<TResoult>> FindAndGroupByAsync<TKey, TResoult>(Expression<Func<TEntity, bool>> predicate,
-                                Expression<Func<TEntity, TKey>> keySelector, Expression<Func<IGrouping<TKey, TEntity>, TResoult>> selector)
-        {
-            return await _dbContext.Set<TEntity>().Where(predicate).GroupBy(keySelector).Select(selector).ToListAsync();
-        }
-        public async Task<IEnumerable<TEntity>> FindAndOrderByAsync<TKey, TResoult>(Expression<Func<TEntity, bool>> predicate,
-                        Expression<Func<TEntity, TKey>> keySelector)
-        {
-            return await _dbContext.Set<TEntity>().Where(predicate).OrderBy(keySelector).ToListAsync();
-        }
         public async Task<TEntity?> GetOneAsync(int entityId)
         {
             return await _dbContext.Set<TEntity>().FindAsync(entityId);
@@ -62,21 +51,10 @@ namespace Infrastructure.Repositories
         {
             _dbContext.Set<TEntity>().RemoveRange(entities);
         }
-        public async Task<TEntity?> FindOneAndIncludeAsync<TProperty>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TProperty>> navigationPropertyPath)
+
+        public Task<TEntity?> FindOneAndIncludeAsync<TProperty>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TProperty>> navigationPropertyPath)
         {
-            return await _dbContext.Set<TEntity>().Where(predicate).Include(navigationPropertyPath).FirstOrDefaultAsync();
-        }
-        public async Task<IEnumerable<TEntity>> FindAndIncludeAsync<TProperty>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TProperty>> navigationPropertyPath)
-        {
-            return await _dbContext.Set<TEntity>().Where(predicate).Include(navigationPropertyPath).ToListAsync();
-        }
-        public async Task<IEnumerable<TEntity>> FindAndIncludeX2Async<TProperty, TPropertyX2>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TProperty>> navigationPropertyPath, Expression<Func<TEntity, TPropertyX2>> navigationPropertyPathX2)
-        {
-            return await _dbContext.Set<TEntity>().Where(predicate).Include(navigationPropertyPath).Include(navigationPropertyPathX2).ToListAsync();
-        }
-        public async Task<TEntity?> FindOneAndIncludeX2Async<TProperty, TPropertyX2>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TProperty>> navigationPropertyPath, Expression<Func<TEntity, TPropertyX2>> navigationPropertyPathX2)
-        {
-            return await _dbContext.Set<TEntity>().Where(predicate).Include(navigationPropertyPath).Include(navigationPropertyPathX2).FirstOrDefaultAsync();
+            throw new NotImplementedException();
         }
     }
 }

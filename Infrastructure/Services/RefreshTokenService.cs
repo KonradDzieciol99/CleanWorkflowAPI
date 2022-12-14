@@ -52,7 +52,7 @@ namespace Infrastructure.Services
 
             if (string.IsNullOrEmpty(refreshTokenAsString))
             {
-                throw new ArgumentNullException("empty cookie");//badrequest???
+                throw new BadRequestException("empty cookie");
             }
 
             if (Guid.TryParse(refreshTokenAsString, out Guid refreshTokenAsGuid))
@@ -60,7 +60,7 @@ namespace Infrastructure.Services
                 return refreshTokenAsGuid;
             }
 
-            throw new FormatException("bad format of cookie");//badrequest???
+            throw new BadRequestException("bad format of cookie");
         }
 
         public void SetRefreshTokenInCookie(Guid refreshToken)
@@ -69,7 +69,10 @@ namespace Infrastructure.Services
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(7), // one week expiry time
+                Expires = DateTime.UtcNow.AddDays(1),
+                SameSite = SameSiteMode.None,
+                Secure = true,
+                IsEssential = true
             };
 
             try
@@ -97,7 +100,6 @@ namespace Infrastructure.Services
             }
 
             throw new BadRequestException("Can't revoke RefreshToken");
-
         }
     }
 }

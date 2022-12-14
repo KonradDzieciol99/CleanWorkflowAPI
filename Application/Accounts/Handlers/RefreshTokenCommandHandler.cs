@@ -32,8 +32,11 @@ namespace Application.Accounts.Handlers
         public async Task<UserDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var endOfLifeRefreshToken = _refreshTokenService.GetRefreshTokenFromCookie();
+            //var refreshToken = _unitOfWork.RefreshTokensRepository. // get refresh token tutaj razem z uzytkownikiem
+            var refreshToken = await _unitOfWork.Repository<RefreshToken>().ListAllAsync();
+
             var user = await _identityService.FindRefreshTokenOwner(endOfLifeRefreshToken);
-            await _refreshTokenService.RevokeRefreshToken(endOfLifeRefreshToken,user);
+            //await _refreshTokenService.RevokeRefreshToken(endOfLifeRefreshToken,user);
 
             var newRefreshToken = await _refreshTokenService.CreateRefreshToken(user);
             var jwtToken = await _jwtTokenService.CreateToken(user);
